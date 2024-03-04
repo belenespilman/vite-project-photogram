@@ -4,19 +4,24 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input" 
 import {useForm} from 'react-hook-form'
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/shared/Loader"
 import { createUserAccount } from "@/lib/appwrite/api"
 import { useToast } from "@/components/ui/use-toast"
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations"
+
+
 
 
 
 
 const SingupForm = () => {
   const {toast} = useToast();
-  const isLoading= false;
+  const navigate = useNavigate();
+ 
   
+
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -26,6 +31,10 @@ const SingupForm = () => {
       password: ""
     },
   })
+
+  //Queries
+  const {mutateAsync: createUserAccount, isLoading: isCreatingUser} = useCreateUserAccount() as any;
+  const {mutateAsync: signInAccount, isLoading: isSignIn}= useSignInAccount() as any;
  
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     const newUser = await createUserAccount(values)
@@ -35,11 +44,18 @@ const SingupForm = () => {
         title: "Sign up failed. Please try again",
       })
     }
-    // const session = await signInAccount()
+    const session = await signInAccount({
+      email: values.email,
+      password: values.password, 
+      
+    })
+
+    if(! session ) {
+      return toast({title: "Sign in failed. Please try again"})
+    } 
   }
  
 
-  
   return (
 
     <Form {...form}>
@@ -107,7 +123,7 @@ const SingupForm = () => {
           </FormItem>
         )}
       />
-      <Button type="submit" className="shad-button_primary">{isLoading? 
+      <Button type="submit" className="shad-button_primary">{isCreatingUser? 
       (<div className="flex-center gap-2">
             <Loader/> Loading...
       </div>):
