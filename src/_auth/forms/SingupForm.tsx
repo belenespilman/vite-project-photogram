@@ -10,17 +10,13 @@ import Loader from "@/components/shared/Loader"
 import { createUserAccount } from "@/lib/appwrite/api"
 import { useToast } from "@/components/ui/use-toast"
 import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations"
-
-
-
-
-
+import { useUserContext } from "@/context/AuthContext"
 
 const SingupForm = () => {
   const {toast} = useToast();
-  const navigate = useNavigate();
- 
-  
+  const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
+ const navigate = useNavigate();
+
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -33,8 +29,8 @@ const SingupForm = () => {
   })
 
   //Queries
-  const {mutateAsync: createUserAccount, isLoading: isCreatingUser} = useCreateUserAccount() as any;
-  const {mutateAsync: signInAccount, isLoading: isSignIn}= useSignInAccount() as any;
+  const {mutateAsync: createUserAccount, isPending: isCreatingUser} = useCreateUserAccount();
+  const {mutateAsync: signInAccount, isPending: isSignIn}= useSignInAccount();
  
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     const newUser = await createUserAccount(values)
@@ -53,7 +49,20 @@ const SingupForm = () => {
     if(! session ) {
       return toast({title: "Sign in failed. Please try again"})
     } 
+
+   
+     const isLoggedIn = await checkAuthUser()
+
+     if (isLoggedIn) {
+      form.reset();
+
+      navigate("/")}
+      else {
+       return toast({title: "Sign in failed. Please try again"})
+    } 
   }
+
+
  
 
   return (
