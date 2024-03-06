@@ -15,7 +15,7 @@ import { useUserContext } from "@/context/AuthContext"
 const SingupForm = () => {
   const {toast} = useToast();
   const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
- const navigate = useNavigate();
+   const navigate = useNavigate();
 
 
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -53,6 +53,8 @@ const SingupForm = () => {
    
      const isLoggedIn = await checkAuthUser()
 
+
+     
      if (isLoggedIn) {
       form.reset();
 
