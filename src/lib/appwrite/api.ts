@@ -69,7 +69,7 @@ export async function getcurrentUser() {
   }
 }
 
-export async function signOutAccout() {
+export async function signOutAccount() {
   try {
     const session = await account.deleteSession("current")
     return session;
