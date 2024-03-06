@@ -29,3 +29,9 @@ export async function signInAccount(user: { email: string; password: string }) {
     console.log(error);
   }
 }
+
+export const useSignoutAccount = () => {
+  return useMutation({
+    mutationFn: () => useSignoutAccount(user)
+  });
+};
