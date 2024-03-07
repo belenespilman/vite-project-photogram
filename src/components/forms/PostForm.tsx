@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea"
     const navigate = useNavigate();
     const { toast } = useToast();
     const { user } = useUserContext();
+
     const form = useForm<z.infer<typeof PostValidation>>({
       resolver: zodResolver(PostValidation),
       defaultValues: {
@@ -41,7 +42,7 @@ import { Textarea } from "@/components/ui/textarea"
   
     // Handler
     const handleSubmit = async (value: z.infer<typeof PostValidation>) => {
-      // ACTION = UPDATE
+      
       if (post && action === "Update") {
         const updatedPost = await updatePost({
           ...value,
@@ -135,7 +136,7 @@ import { Textarea } from "@/components/ui/textarea"
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Art, Expression, Learn"
+                    placeholder="Art, Expression, Learning"
                     type="text"
                     className="shad-input"
                     {...field}
