@@ -1,4 +1,4 @@
-import { INewUser } from "@/types";
+import { INewPost, INewUser } from "@/types";
 import {
   useQuery,
   useMutation,
@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/react-query/queryKeys";
-import { createUserAccount } from "../appwrite/api";
+import { createPost, createUserAccount } from "../appwrite/api";
 import { account } from "../appwrite/config";
 import { signOutAccount } from "../appwrite/api";
 
